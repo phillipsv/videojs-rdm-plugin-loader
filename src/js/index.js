@@ -415,18 +415,18 @@ const initPlugin = (player, plugins) => {
     });
   }
 
-    /**
-     * Fixes autoplay bug
-     */
+  /**
+   * Fixes autoplay bug
+   */
   player.on('adsready', () => {
         // Ensure the setup vars were set
-    if (this.tagAttributes['data-setup']) {
+    if (player.tagAttributes['data-setup']) {
             // Parse it to JS
-      const setup_vars = JSON.parse(this.tagAttributes['data-setup']);
+      const setup_vars = JSON.parse(player.tagAttributes['data-setup']);
 
       if (typeof setup_vars.autoplay_var !== 'undefined') {
-        if ((setup_vars.autoplay_var === true) && (this.ads.state != 'ad-playback')) {
-          this.play();
+        if ((setup_vars.autoplay_var === true) && (player.ads.state != 'ad-playback')) {
+          player.play();
         }
       }
     }
@@ -463,10 +463,10 @@ const rdmPluginLoader = function(options) {
       if (response.status === 200) {
         initPlugin(player, response.data);
       }
-    })
-            .catch(function() {
-              return;
-            });
+    }).catch(function(error) {
+      console.log(error);
+      return;
+    });
   } else {
     initPlugin(player, window.plugins);
   }

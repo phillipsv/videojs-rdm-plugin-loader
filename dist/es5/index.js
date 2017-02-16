@@ -435,13 +435,13 @@ var initPlugin = function initPlugin(player, plugins) {
    */
   player.on('adsready', function () {
     // Ensure the setup vars were set
-    if (undefined.tagAttributes['data-setup']) {
+    if (player.tagAttributes['data-setup']) {
       // Parse it to JS
-      var setup_vars = JSON.parse(undefined.tagAttributes['data-setup']);
+      var setup_vars = JSON.parse(player.tagAttributes['data-setup']);
 
       if (typeof setup_vars.autoplay_var !== 'undefined') {
-        if (setup_vars.autoplay_var === true && undefined.ads.state != 'ad-playback') {
-          undefined.play();
+        if (setup_vars.autoplay_var === true && player.ads.state != 'ad-playback') {
+          player.play();
         }
       }
     }
@@ -477,7 +477,8 @@ var rdmPluginLoader = function rdmPluginLoader(options) {
       if (response.status === 200) {
         initPlugin(player, response.data);
       }
-    }).catch(function () {
+    }).catch(function (error) {
+      console.log(error);
       return;
     });
   } else {
