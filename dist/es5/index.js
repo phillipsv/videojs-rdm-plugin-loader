@@ -412,6 +412,10 @@ var setupJqueryDependentPlugins = function setupJqueryDependentPlugins(player, p
   }
 };
 
+var setupDisplayTitle = function setupDisplayTitle(player, plugins) {
+  player.displaytitle({ "advertisement_title": plugins.advertisement_title });
+};
+
 var initPlugin = function initPlugin(player, plugins) {
 
   player.ready(function () {
@@ -422,6 +426,7 @@ var initPlugin = function initPlugin(player, plugins) {
       setupMoat(player);
     }
     setupJqueryDependentPlugins(player, plugins);
+    setupDisplayTitle(player, plugins);
   });
 
   if (plugins.local_ima3_enable) {

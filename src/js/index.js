@@ -397,6 +397,10 @@ const setupJqueryDependentPlugins = (player, plugins) => {
   }
 };
 
+const setupDisplayTitle = (player,plugins) => {
+  player.displaytitle({"advertisement_title":plugins.advertisement_title});
+};
+
 const initPlugin = (player, plugins) => {
 
   player.ready(() => {
@@ -407,6 +411,7 @@ const initPlugin = (player, plugins) => {
       setupMoat(player);
     }
     setupJqueryDependentPlugins(player, plugins);
+    setupDisplayTitle(player,plugins);
   });
 
   if (plugins.local_ima3_enable) {
