@@ -9,7 +9,7 @@
 
     var player = this;
     var el = player.el_;
-    var settings = extend({}, defaults, options || {});
+    defaults = extend({}, defaults, options || {});
 
     player.on('loadedmetadata', function() {
       var title = player.el_.getElementsByClassName( className );
@@ -49,7 +49,7 @@
     if (typeof videoName !== 'undefined')
       return '<span class="text-container"><span class="site-logo"></span><span class="text"><span class="now-playing">'+videoName+'</span></span></span>';
     else
-      return '<div class="text-container">' + settings.advertisement_title + '</div>';
+      return '<div class="text-container">' + defaults.advertisement_title + '</div>';
   };
 
   setupTitle = function(player) {
