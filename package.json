@@ -54,5 +54,11 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:phillipsv/videojs-rdm-plugin-loader.git"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "es6": true
+    }
   }
 }
