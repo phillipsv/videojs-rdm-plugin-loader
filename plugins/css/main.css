@@ -1,0 +1,35 @@
+.bc-video {
+    display: block;
+    position: relative;
+    margin-bottom: 65px;
+}
+
+.bc-video-iframe {
+    margin-bottom: 0;
+    padding-bottom: 65px;
+}
+
+.bc-video .player-loader {
+    width: 100%;
+    height: 100%;
+    background: #FFF;
+    position:absolute;
+    z-index:0;
+}
+
+.bc-video .player-loader:after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    content: " ";
+    background-image: url(../images/loader.gif);
+    background-size: 50px;
+    margin-left: -25px;
+    margin-top: -50px;
+}
+
+video::-internal-media-controls-overlay-cast-button {
+    display: none;
+}

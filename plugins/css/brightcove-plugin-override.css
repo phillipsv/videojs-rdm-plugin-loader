@@ -1,0 +1,4 @@
+li#toplevel_page_brightcove ul.wp-submenu li:nth-child(3),
+.brightcove-modal .brightcove.playlists {
+    display: none;
+}
