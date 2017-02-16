@@ -1,6 +1,6 @@
 {
   "name": "videojs-rdm-plugin-loader",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Loads all the plugins after acquiring the configuration from the page or URL",
   "main": "dist/es5/index.js",
   "jsnext:main": "src/js/index.js",
@@ -45,9 +45,14 @@
     "src/"
   ],
   "dependencies": {
+    "axios": "^0.15.3",
     "video.js": "^5.16.0"
   },
   "devDependencies": {
     "videojs-spellbook": "^2.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:phillipsv/videojs-rdm-plugin-loader.git"
   }
 }

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -6,9 +6,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _video = require("video.js");
+var _video = require('video.js');
 
 var _video2 = _interopRequireDefault(_video);
+
+var _axios = require('axios');
+
+var _axios2 = _interopRequireDefault(_axios);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19,28 +23,12 @@ var defaults = {};
 var registerPlugin = _video2.default.registerPlugin || _video2.default.plugin;
 // const dom = videojs.dom || videojs;
 
-/**
- * Function to invoke when the player is ready.
- *
- * This is a great place for your plugin to initialize itself. When this
- * function is called, the player will have its DOM and child components
- * in place.
- *
- * @function onPlayerReady
- * @param    {Player} player
- *           A Video.js player.
- * @param    {Object} [options={}]
- *           An object of options left to the plugin author to define.
- */
-var onPlayerReady = function onPlayerReady(player, options) {};
-
 // const getUrlParameter = (name) => {
 //         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
 //         var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
 //         var results = regex.exec(location.search);
 //         return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 // };
-
 var isInIframe = function isInIframe() {
     return window.self !== window.top;
 };
@@ -66,10 +54,9 @@ var getParameterByName = function getParameterByName(name, url) {
 
 var getSyndicatedTag = function getSyndicatedTag(player) {
     var tags = player.mediainfo.tags;
-    var syndicated = "";
     for (var i in tags) {
         if (tags[i].indexOf("syndicated=") >= 0) {
-            syndicated = tags[i].split("=")[1]; // Getting the value of syndicated
+            var syndicated = tags[i].split("=")[1]; // Getting the value of syndicated
             return syndicated;
         }
     }
@@ -84,7 +71,7 @@ var addToIU = function addToIU(url, position, addition) {
         iu = iu.substring(1);
     }
 
-    iuParts = iu.split("/");
+    var iuParts = iu.split("/");
 
     var arrayPosition = position - 1;
 
@@ -158,7 +145,7 @@ var getAdUtilTargetQueryString = function getAdUtilTargetQueryString() {
     for (var key in adUtilTargetObject) {
         var value = adUtilTargetObject[key];
 
-        if ((typeof value === "undefined" ? "undefined" : _typeof(value)) == "object" || typeof value == "array") {
+        if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) == "object" || typeof value == "array") {
             value = value.join(",");
         }
 
@@ -206,7 +193,7 @@ var getRequestUri = function getRequestUri() {
             requestUri = parent.location.pathname;
         } catch ($e) {
             //to catch cross-origin issues.
-            requestUrl = ''; //setting it to false, so as to not report wrong values.
+            requestUri = ''; //setting it to false, so as to not report wrong values.
         }
     }
     return requestUri;
@@ -230,7 +217,6 @@ var getAdUtilTarget = function getAdUtilTarget() {
 };
 
 var setupIMA3 = function setupIMA3(player, plugins) {
-
     var adServerUrl = "";
 
     if (typeof player.ima3.settings !== "undefined") {
@@ -278,6 +264,195 @@ var setupIMA3 = function setupIMA3(player, plugins) {
     }
 };
 
+var setupMoat = function setupMoat(player) {
+    player["Moat"]({
+        "partnerCode": "rogersbrightcoveint878700116445"
+    });
+};
+
+var setupChartbeat = function setupChartbeat(player, plugins) {
+    player['chartbeat']({
+        "uid": plugins.chartbeat.uid,
+        "domain": plugins.chartbeat.domain
+    });
+};
+
+var setupStreamsense = function setupStreamsense(player, plugins) {
+    player['comscore']({
+        "c2": plugins.streamsense.c2,
+        "labelmapping": "c3=" + plugins.streamsense.c3 + ",c4=" + plugins.streamsense.c4 + ",c6=" + plugins.streamsense.c6 + ",ns_st_st=" + plugins.streamsense.brand + ",ns_st_pu=" + plugins.streamsense.publisher + ",ns_st_pr=" + plugins.streamsense.ns_st_pr + ",ns_st_ep=" + plugins.streamsense.ns_st_ep + ",ns_st_sn=" + plugins.streamsense.ns_st_sn + ",ns_st_en=" + plugins.streamsense.ns_st_en + ",ns_st_ge=" + plugins.streamsense.ns_st_ge + ",ns_st_ti=" + plugins.streamsense.ns_st_ti + ",ns_st_ia=" + plugins.streamsense.ns_st_ia + ", ns_st_ce=" + plugins.streamsense.ns_st_ce + ",ns_st_ddt=" + plugins.streamsense.ns_st_ddt + ",ns_st_tdt= " + plugins.streamsense.ns_st_tdt
+    });
+};
+
+var setupOmniture = function setupOmniture(player, plugins) {
+
+    var vs_account = 'rogersrmiradiodev';
+    if (typeof plugins.site_catalyst_account !== 'undefined') {
+        vs_account = plugins.site_catalyst_account;
+    } else {
+        if (_typeof(window.s) === 'object') {
+            vs_account = s.account;
+        } else if (typeof window.s_account !== 'undefined') {
+            vs_account = s_account;
+        } else {
+            console.error('***No reporting variables set for video analytics');
+        }
+    }
+
+    var vs_channel = 'Video';
+    if (typeof plugins.site_catalyst_brand !== 'undefined') {
+        vs_channel = plugins.site_catalyst_brand;
+    }
+
+    var bcgs_adobe_config = {
+
+        VISITOR_API: {
+            MARKETING_CLOUD_ORG_ID: 'D7FD34FA53D63B860A490D44@AdobeOrg',
+            NAMESPACE: 'rogersmedia', //
+            TRACKING_SERVER: 'om.rogersmedia.com' // om.rogersmedia.com // needs tp change
+        },
+
+        APP_MEASUREMENT: {
+            RSID: vs_account, // rogersrmiradiodev
+            TRACKING_SERVER: 'om.rogersmedia.com' // om.rogersmedia.com
+        },
+
+        HEARTBEAT: {
+            DISABLE: false, // disable if using milestone tracking
+            TRACKING_SERVER: 'rogersmedia.hb.omtrdc.net', // om.rogersmedia.com
+            PUBLISHER: 'D7FD34FA53D63B860A490D44@AdobeOrg',
+            CHANNEL: vs_channel,
+            OVP: 'Brightcove',
+            SDK: '1.5.2',
+            JOB_ID: 'sc_va',
+            DEBUG_LOGGING: false
+        },
+
+        QUALITY: {
+            AVERAGE_BITRATE: 0,
+            TIME_TO_START: 0
+        },
+
+        CUSTOM_EVENT: {
+            disable: true, // disable if using heartbeat tracking
+            bc_data_mapping: {
+                name: "eVar106,prop2", // video name, accepts multiple eVars/props
+                segment: "eVar203", // current milestone (e.g., '1:M:0-25')
+                contentType: "eVar201", // content type (e.g., 'video' or 'ad')
+                timePlayed: "event203", // amount of time played since last tracking event, tracked with milestone events
+                view: "event201", // video start event
+                segmentView: "event202", // general milestone tracking event, tracked with milestone events
+                complete: "event207", // video complete event
+                milestones: { // milestones in percent; milestones can be added/removed from list
+                    25: "event204", // 25%
+                    50: "event205", // 50%
+                    75: "event206" // 75%
+                }
+            },
+            // keep to track volume change events
+            bc_volumechange: {
+                event: 'event208', // event tracking number
+                evar: 'prop1' // the new volume chosen by the user (from 0-1.00), only one prop/eVar supported here
+            },
+            // keep to track when user has paused an ad
+            bc_ad_pause: {
+                event: 'event209', // event tracking number
+                evar: 'eVar205' // time value of pausing an ad, only one prop/eVar supported here
+            },
+            // keep to track when user enters full screen mode
+            bc_fullscreen_enter: {
+                event: 'event212' // event tracking number
+            },
+            // keep to track when user exits full screen mode
+            bc_fullscreen_exit: {
+                event: 'event213' // event tracking number
+            },
+            // keep to track when user opens social share menu
+            bc_social_opened: {
+                event: 'event214' // event tracking number
+            },
+            // keep to track when user closes social share menu
+            bc_social_closed: {
+                event: 'event215' // event tracking number
+            }
+        }
+    };
+
+    player.BCGSAdobeAnalyticsPlugin({
+        options: bcgs_adobe_config
+    });
+};
+
+var setupErrorHandlers = function setupErrorHandlers(player) {
+
+    //handling Geo-restricted errors.
+    player.one('bc-catalog-error', function () {
+        var rPlayer = this,
+            specificError;
+
+        rPlayer.errors({
+            'errors': {
+                '-3': {
+                    'headline': 'This video is not available in your region.',
+                    'type': 'CLIENT_GEO'
+                }
+            }
+        });
+
+        if (typeof rPlayer.catalog.error !== 'undefined') {
+            specificError = rPlayer.catalog.error.data[0];
+            if (specificError !== 'undefined' && specificError.error_subcode == "CLIENT_GEO") {
+                rPlayer.error({ code: '-3' });
+            }
+        }
+    });
+};
+
+var hideLoaders = function hideLoaders(player) {
+    // Hide loaders
+    //jQuery(this.el_).closest('.rdm-bc-video').find('.vjs-loader').fadeOut();
+
+};
+
+var initPlugin = function initPlugin(player, plugins) {
+
+    player.ready(function () {
+        setupChartbeat(player, plugins);
+        setupStreamsense(player, plugins);
+        setupOmniture(player, plugins);
+        if (plugins.local_ima3_enable) {
+            setupMoat(player);
+        }
+    });
+
+    if (plugins.local_ima3_enable) {
+        player.on('loadedmetadata', function () {
+            setupIMA3(player, plugins);
+            hideLoaders(player);
+        });
+    }
+
+    /**
+     * Fixes autoplay bug
+     */
+    player.on('adsready', function () {
+        // Ensure the setup vars were set
+        if (undefined.tagAttributes['data-setup']) {
+            // Parse it to JS
+            var setup_vars = JSON.parse(undefined.tagAttributes['data-setup']);
+            if (typeof setup_vars.autoplay_var !== 'undefined') {
+                if (setup_vars.autoplay_var === true && undefined.ads.state != 'ad-playback') {
+                    undefined.play();
+                }
+            }
+        }
+    });
+    /**
+     * setup custom error handlers
+     */
+    setupErrorHandlers(player);
+};
+
 /**
  * A video.js plugin.
  *
@@ -289,15 +464,26 @@ var setupIMA3 = function setupIMA3(player, plugins) {
  *           An object of options left to the plugin author to define.
  */
 var rdmPluginLoader = function rdmPluginLoader(options) {
-    var _this = this;
 
-    this.ready(function () {
-        onPlayerReady(_this, _video2.default.mergeOptions(defaults, options));
-    });
+    var player = this;
+    if (!options.plugin_url) {
+        //plugin cannot be instantiated
+        return;
+    }
 
-    this.loadedmetadata(function () {
-        setupIMA3(_this, _video2.default.mergeOptions(defaults, options));
-    });
+    if (typeof window !== 'undefined' && typeof window.plugins === 'undefined') {
+
+        _axios2.default.get(options.plugin_url).then(function (response) {
+            if (response.status === 200) {
+                initPlugin(player, response.data);
+            }
+        }).catch(function (error) {
+            console.log(error);
+            return;
+        });
+    } else {
+        initPlugin(player, window.plugins);
+    }
 };
 
 // Register the plugin with video.js.
