@@ -428,8 +428,8 @@ const initPlugin = (player, plugins) => {
 
   if(other_events.length > 0){
     for(const key in other_events){
-      const func = ready_events[key].func;
-      const options = ready_events[key].options;
+      const func = other_events[key].func;
+      const options = other_events[key].options;
       console.log("handling other events");
       player.one(options.loading_event, () =>{
         console.log(func, options);
