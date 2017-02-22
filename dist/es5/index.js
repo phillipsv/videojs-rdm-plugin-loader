@@ -378,7 +378,7 @@ var pluginFunctions = {
     });
   },
   setup_displaytitle: function setup_displaytitle(player, options) {
-    player.displaytitle({ "advertisement_title": option.advertisement_title });
+    player.displaytitle({ "advertisement_title": options.advertisement_title });
   }
 };
 
