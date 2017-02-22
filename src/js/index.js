@@ -419,15 +419,19 @@ const initPlugin = (player, plugins) => {
   if(ready_events.length > 0){
     player.ready(() => {
       for(const key in ready_events){
-        pluginFunctions[key.func](player,key.options);
+        const func = ready_events[key].func;
+        const options = ready_events[key].options;
+        pluginFunctions[func](player,options);
       }
     });
   }
 
   if(other_events.length > 0){
     for(const key in other_events){
-      player.one(key.options.loading_event, () =>{
-        pluginFunctions[key.func](player,key.options);
+      const func = ready_events[key].func;
+      const options = ready_events[key].options;
+      player.one(options.loading_event, () =>{
+        pluginFunctions[func](player,options);
       });
     }
   }

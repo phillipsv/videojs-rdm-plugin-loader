@@ -432,15 +432,19 @@ var initPlugin = function initPlugin(player, plugins) {
   if (ready_events.length > 0) {
     player.ready(function () {
       for (var _key2 in ready_events) {
-        pluginFunctions[_key2.func](player, _key2.options);
+        var func = ready_events[_key2].func;
+        var _options = ready_events[_key2].options;
+        pluginFunctions[func](player, _options);
       }
     });
   }
 
   if (other_events.length > 0) {
     var _loop = function _loop(_key3) {
-      player.one(_key3.options.loading_event, function () {
-        pluginFunctions[_key3.func](player, _key3.options);
+      var func = ready_events[_key3].func;
+      var options = ready_events[_key3].options;
+      player.one(options.loading_event, function () {
+        pluginFunctions[func](player, options);
       });
     };
 
