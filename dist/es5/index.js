@@ -221,7 +221,6 @@ var pluginFunctions = {
   },
 
   setup_streamsense: function setup_streamsense(player, options) {
-    console.log(player, options);
     player.comscore({
       c2: options.c2,
       labelmapping: 'c3=' + options.c3 + ',c4=' + options.c4 + ',c6=' + options.c6 + ',ns_st_st=' + options.brand + ',ns_st_pu=' + options.publisher + ',ns_st_pr=' + options.ns_st_pr + ',ns_st_ep=' + options.ns_st_ep + ',ns_st_sn=' + options.ns_st_sn + ',ns_st_en=' + options.ns_st_en + ',ns_st_ge=' + options.ns_st_ge + ',ns_st_ti=' + options.ns_st_ti + ',ns_st_ia=' + options.ns_st_ia + ', ns_st_ce=' + options.ns_st_ce + ',ns_st_ddt=' + options.ns_st_ddt + ',ns_st_tdt= ' + options.ns_st_tdt
@@ -324,7 +323,6 @@ var pluginFunctions = {
   },
 
   setup_ima3: function setup_ima3(player, options) {
-    console.log(options);
     var adServerUrl = '';
 
     if (typeof player.ima3.settings !== 'undefined') {
