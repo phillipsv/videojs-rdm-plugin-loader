@@ -308,6 +308,7 @@ const pluginFunctions = {
   },
 
   setup_ima3: (player, options) => {
+    console.log(1231231231);
     let adServerUrl = '';
 
     if (typeof player.ima3.settings !== 'undefined') {
@@ -413,14 +414,13 @@ const initPlugin = (player, plugins) => {
         }
     }
   }
-  console.log(ready_events);
-  console.log(other_events);
 
   if(ready_events.length > 0){
     player.ready(() => {
       for(const key in ready_events){
         const func = ready_events[key].func;
         const options = ready_events[key].options;
+        console.log(func, options);
         pluginFunctions[func](player,options);
       }
     });
@@ -430,7 +430,9 @@ const initPlugin = (player, plugins) => {
     for(const key in other_events){
       const func = ready_events[key].func;
       const options = ready_events[key].options;
+      console.log("handling other events");
       player.one(options.loading_event, () =>{
+        console.log(func, options);
         pluginFunctions[func](player,options);
       });
     }

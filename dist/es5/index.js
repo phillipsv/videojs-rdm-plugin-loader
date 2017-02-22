@@ -323,6 +323,7 @@ var pluginFunctions = {
   },
 
   setup_ima3: function setup_ima3(player, options) {
+    console.log(1231231231);
     var adServerUrl = '';
 
     if (typeof player.ima3.settings !== 'undefined') {
@@ -426,14 +427,13 @@ var initPlugin = function initPlugin(player, plugins) {
       }
     }
   }
-  console.log(ready_events);
-  console.log(other_events);
 
   if (ready_events.length > 0) {
     player.ready(function () {
       for (var _key2 in ready_events) {
         var func = ready_events[_key2].func;
         var _options = ready_events[_key2].options;
+        console.log(func, _options);
         pluginFunctions[func](player, _options);
       }
     });
@@ -443,7 +443,9 @@ var initPlugin = function initPlugin(player, plugins) {
     var _loop = function _loop(_key3) {
       var func = ready_events[_key3].func;
       var options = ready_events[_key3].options;
+      console.log("handling other events");
       player.one(options.loading_event, function () {
+        console.log(func, options);
         pluginFunctions[func](player, options);
       });
     };
