@@ -1,59 +1,77 @@
 # videojs-rdm-plugin-loader
 
-Loads all the plugins after acquiring the configuration from the page or URL
-
-## Installation
-
-```sh
-npm install --save videojs-rdm-plugin-loader
-```
+Loads critical RDM Video Cloud plugins. 
 
 ## Usage
-
-To include videojs-rdm-plugin-loader on your website or web application, use any of the following methods.
-
-### `<script>` Tag
-
-This is the simplest case. Get the script in whatever way you prefer and include the plugin _after_ you include [video.js][videojs], so that the `videojs` global is available.
-
-```html
-<script src="//path/to/video.min.js"></script>
-<script src="//path/to/videojs-rdm-plugin-loader.min.js"></script>
-<script>
-  var player = videojs('my-video');
-
-  player.rdmPluginLoader();
-</script>
-```
-
-### Browserify
-
-When using with Browserify, install videojs-rdm-plugin-loader via npm and `require` the plugin as you would any other module.
+Built to be used with the Brightcove Video Cloud player. Should be added at the end of the plugin list while setting up the player on Brightcove. The plugins configuration should be available in global variable `window.plugins` on the page. An example JSON is given below. 
 
 ```js
-var videojs = require('video.js');
-
-// The actual plugin function is exported by this module, but it is also
-// attached to the `Player.prototype`; so, there is no need to assign it
-// to a variable.
-require('videojs-rdm-plugin-loader');
-
-var player = videojs('my-video');
-
-player.rdmPluginLoader();
+window.plugins = {
+	"ima3": {
+		"loading_event": "loadedmetadata",
+		"ad_server_url": "http:\/\/pubads.g.doubleclick.net\/gampad\/ads?sz=640x360&iu=\/7326\/en.bttoronto.web&ciu_szs=728x90,975x50,300x250&impl=s&gdfp_req=1&ad_rule=1&cmsid=984&env=vp&output=xml_vast2&unviewed_position_start=1&url={window.location.href}&correlator={timestamp}&vid={mediainfo.id}&title={mediainfo.name}&referrer={document.referrer}&duration={mediainfo.duration}&description_url=BTToronto.ca",
+		"syndicated_enable": true
+	},
+	"moat": {
+		"loading_event": "loadedmetadata",
+		"partner_code": "rogersbrightcoveint878700116445"
+	},
+	"streamsense": {
+		"publisher": "\"Rogers\"",
+		"brand": "",
+		"c2": "16433041",
+		"c3": "\"BTTORONTO\"",
+		"c4": "\"*null\"",
+		"c6": "\"*null\"",
+		"ns_st_pr": "\"*null\"",
+		"ns_st_ep": "\"*null\"",
+		"ns_st_sn": "\"*null\"",
+		"ns_st_en": "\"*null\"",
+		"ns_st_ge": "\"*null\"",
+		"ns_st_ti": "\"*null\"",
+		"ns_st_ia": "\"*null\"",
+		"ns_st_ce": "\"*null\"",
+		"ns_st_ddt": "\"*null\"",
+		"ns_st_tdt": "\"*null\"",
+		"loading_event": "ready"
+	},
+	"chartbeat": {
+		"uid": "55711",
+		"domain": "bttoronto.ca",
+		"loading_event": "ready"
+	},
+	"omniture": {
+		"loading_event": "ready",
+		"site_catalyst_account": "rogersrmitvdev",
+		"site_catalyst_brand": "BT Toronto"
+	},
+	"displaytitle": {
+		"loading_event": "ready",
+		"advertisement_title": "Advertisement"
+	}
+}
 ```
+In case, the global variable is missing, the plugin will try to fetch the configuration from a predefined endpoint on the site where it is loaded.
 
-### RequireJS/AMD
+### Adding a new plugin setup
 
-When using with RequireJS (or another AMD library), get the script in whatever way you prefer and `require` the plugin as you normally would:
-
+In order to add a new plugin, the plugin configuration should be added to the above JSON. For eg.
 ```js
-require(['video.js', 'videojs-rdm-plugin-loader'], function(videojs) {
-  var player = videojs('my-video');
-
-  player.rdmPluginLoader();
-});
+"newplugin":{
+    "loading_event":"ready", //This field is required to tell the plugin at which videojs event the plugin should be loaded
+    "config":"config1"
+}
 ```
+
+The `src/js/index.js` file needs to be edited and a new function has to be added to the `pluginFunctions` object. The name of which should be `setup_newplugin(player, options)` and it should contain the logic required to load the plugin. The configuration will be automatically passed as the `options` argument to the function. **Please note the plugin name defined in the JSON should match the function name as shown**
+
+### Building the plugin
+
+```shell
+npm run build
+```
+
+The minified js will be available at dist/browser/videojs-rdm-plugin-loader.min.js after build is successfully completed, which should be uploaded to the `rdm_video_cloud` repo on brightcove.
 
 ## License
 
