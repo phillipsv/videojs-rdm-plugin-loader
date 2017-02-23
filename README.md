@@ -3,7 +3,7 @@
 Loads critical RDM Video Cloud plugins. 
 
 ## Usage
-Built to be used with the Brightcove Video Cloud player. Should be added at the end of the plugin list while setting up the player on Brightcove. The plugins configuration should be available in global variable `window.plugins` on the page. An example JSON is given below. 
+Built to be used with the Brightcove Video Cloud player. Should be added at the end of the plugin list while setting up the player on Brightcove. The plugins configuration should be available in global variable `window.plugins` on the page where the player is loaded. An example JSON is given below. 
 
 ```js
 window.plugins = {
