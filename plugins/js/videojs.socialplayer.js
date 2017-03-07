@@ -37,10 +37,13 @@
       return;
 
     var url_a = getGetQueryParam('linkbaseurl');
-    if(!url_a){
-      url_a = window.location.href;
+    if(url_a){
       amp_page = true;
     }
+    else{
+      url_a = window.location.href;
+    }
+    
     player.on('loadedmetadata', function() {
       var metadata = {
         title: player.mediainfo.name,
