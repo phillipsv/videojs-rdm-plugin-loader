@@ -458,6 +458,20 @@ const initPlugin = (player, plugins) => {
 
 };
 
+const getPluginConfigUrl= (options) => {
+  //get parameter takes precedence
+  var plugin_url = getParameterByName('pluginConfig');
+  if(plugin_url){
+    return plugin_url;
+  }
+
+  //check in the options
+  if(typeof options.plugin_config !== 'undefined'){
+      return options.plugin_config;
+  }
+
+  return null;
+};
 /**
  * A video.js plugin.
  *
@@ -472,21 +486,22 @@ const rdmPluginLoader = function(options) {
 
   const player = this;
 
-  if (!options.plugin_url) {
-        // plugin cannot be instantiated
-    return;
-  }
-
   if (typeof window !== 'undefined' && typeof window.plugins === 'undefined') {
 
-    axios.get(options.plugin_url).then(function(response) {
-      if (response.status === 200) {
-        initPlugin(player, response.data);
-      }
-    }).catch(function(error) {
-      console.log(error);
-      return;
-    });
+    var plugin_config_url = getPluginConfigUrl(options);
+
+    if(plugin_config_url) {
+      axios.get(plugin_config_url).then(function (response) {
+        if (response.status === 200) {
+          initPlugin(player, response.data);
+        }
+      }).catch(function (error) {
+        console.error(error);
+      });
+    }
+    else{
+      console.error("Plugin config url was not found");
+    }
   } else {
     initPlugin(player, window.plugins);
   }
