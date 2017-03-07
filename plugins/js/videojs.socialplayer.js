@@ -32,9 +32,11 @@
         url: url_a
       };
 
-      if (typeof player.el_.dataset.iframeUrl !== 'undefined') {
-        metadata.embedCode = "<iframe src='"+player.el_.dataset.iframeUrl+"' allowfullscreen frameborder=0></iframe>";
-      }
+      metadata.embedCode = null;
+
+      // if (typeof player.el_.dataset.iframeUrl !== 'undefined') {
+      //   metadata.embedCode = "<iframe src='"+player.el_.dataset.iframeUrl+"' allowfullscreen frameborder=0></iframe>";
+      // }
 
       player.social(metadata);
     });
