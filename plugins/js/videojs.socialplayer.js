@@ -18,12 +18,12 @@
         style = document.createElement('style');
 
     style.type = 'text/css';
+    style.className = 'social-share-amp-style';
     if (style.styleSheet){
       style.styleSheet.cssText = css;
     } else {
       style.appendChild(document.createTextNode(css));
     }
-
     head.appendChild(style);
   };
 
@@ -43,7 +43,7 @@
     else{
       url_a = window.location.href;
     }
-    
+
     player.on('loadedmetadata', function() {
       var metadata = {
         title: player.mediainfo.name,
