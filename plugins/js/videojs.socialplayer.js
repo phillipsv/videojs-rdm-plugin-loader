@@ -33,7 +33,7 @@
       };
 
       if (typeof player.el_.dataset.iframeUrl !== 'undefined') {
-        metadata.embedCode = player.el_.dataset.iframeUrl;
+        metadata.embedCode = "<iframe src='"+player.el_.dataset.iframeUrl+"' allowfullscreen frameborder=0></iframe>";
       }
 
       player.social(metadata);
