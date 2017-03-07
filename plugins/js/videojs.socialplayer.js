@@ -13,10 +13,25 @@
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   };
 
+  var addStyleToHead = function(css){
+    var head = document.head || document.getElementsByTagName('head')[0],
+        style = document.createElement('style');
+
+    style.type = 'text/css';
+    if (style.styleSheet){
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
+    }
+
+    head.appendChild(style);
+  };
+
   var init = function ( options ) {
 
     var player = this;
     var settings = extend({}, defaults, options || {});
+    var amp_page = false;
 
     if (typeof player.social === "undefined")
       return;
@@ -24,6 +39,7 @@
     var url_a = getGetQueryParam('linkbaseurl');
     if(!url_a){
       url_a = window.location.href;
+      amp_page = true;
     }
     player.on('loadedmetadata', function() {
       var metadata = {
@@ -32,11 +48,15 @@
         url: url_a
       };
 
-      metadata.embedCode = null;
+      if (typeof player.el_.dataset.iframeUrl !== 'undefined') {
+        metadata.embedCode = "<iframe src='"+player.el_.dataset.iframeUrl+"' allowfullscreen frameborder=0></iframe>";
+      }
 
-      // if (typeof player.el_.dataset.iframeUrl !== 'undefined') {
-      //   metadata.embedCode = "<iframe src='"+player.el_.dataset.iframeUrl+"' allowfullscreen frameborder=0></iframe>";
-      // }
+      //if its an amp page we hide the embedCode block
+      if(amp_page){
+        var css = '.video-js .vjs-social-embed-code { display: none; }';
+        addStyleToHead(css);
+      }
 
       player.social(metadata);
     });
