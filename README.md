@@ -73,7 +73,7 @@ npm run build
 
 The js files will be available at `dist/browser/`. We should push both `videojs-rdm-plugin-loader.js` and `videojs-rdm-plugin-loader.min.js` after build is successfully completed  to the `rdm_video_cloud` repo on brightcove.
 
-## Other plugins
+## Other brightcove video cloud plugins
 This repository contains all the plugins that are being loaded using the brightcove player interface. They are in the `plugins/js` directory
  
 ### Pushing the files to the brightcove repository
