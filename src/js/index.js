@@ -69,7 +69,7 @@ const addToIU = (url, position, addition) => {
   return url.replace(originalIU, iu);
 };
 
-const getCustomParamsQueryString = () => {
+const getCustomParamsQueryString = (options) => {
 
   let queryString = '';
 
@@ -80,6 +80,10 @@ const getCustomParamsQueryString = () => {
 
   const adUtilityObject = getAdUtility();
   const adUtilTargetQueryString = getAdUtilTargetQueryString();
+
+  if(options.hasOwnProperty('amp_page') && true === options.amp_page){
+    queryString += 'environment=googleamp&';
+  }
 
   if (requestUriParts.length > 0) {
     queryString += 'section=' + requestUriParts[0] + '&';
@@ -327,7 +331,7 @@ const pluginFunctions = {
       }
     }
 
-    const customParams = getCustomParamsQueryString();
+    const customParams = getCustomParamsQueryString(options);
 
     if (customParams != '') {
       adServerUrl += '&cust_params=' + encodeURIComponent(customParams);
@@ -489,11 +493,12 @@ const rdmPluginLoader = function(options) {
   if (typeof window !== 'undefined' && typeof window.plugins === 'undefined') {
 
     var plugin_config_url = getPluginConfigUrl(options);
-
     if(plugin_config_url) {
       axios.get(plugin_config_url).then(function (response) {
         if (response.status === 200) {
-          initPlugin(player, response.data);
+          options = response.data;
+          options.amp_page = true; //currently assuming that if plugin_config_url is found its an amp page.
+          initPlugin(player, options);
         }
       }).catch(function (error) {
         console.error(error);

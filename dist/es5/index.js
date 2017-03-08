@@ -84,7 +84,7 @@ var addToIU = function addToIU(url, position, addition) {
   return url.replace(originalIU, iu);
 };
 
-var getCustomParamsQueryString = function getCustomParamsQueryString() {
+var getCustomParamsQueryString = function getCustomParamsQueryString(options) {
 
   var queryString = '';
 
@@ -95,6 +95,10 @@ var getCustomParamsQueryString = function getCustomParamsQueryString() {
 
   var adUtilityObject = getAdUtility();
   var adUtilTargetQueryString = getAdUtilTargetQueryString();
+
+  if (options.hasOwnProperty('amp_page') && true === options.amp_page) {
+    queryString += 'environment=googleamp&';
+  }
 
   if (requestUriParts.length > 0) {
     queryString += 'section=' + requestUriParts[0] + '&';
@@ -342,7 +346,7 @@ var pluginFunctions = {
       }
     }
 
-    var customParams = getCustomParamsQueryString();
+    var customParams = getCustomParamsQueryString(options);
 
     if (customParams != '') {
       adServerUrl += '&cust_params=' + encodeURIComponent(customParams);
@@ -505,11 +509,12 @@ var rdmPluginLoader = function rdmPluginLoader(options) {
   if (typeof window !== 'undefined' && typeof window.plugins === 'undefined') {
 
     var plugin_config_url = getPluginConfigUrl(options);
-
     if (plugin_config_url) {
       _axios2.default.get(plugin_config_url).then(function (response) {
         if (response.status === 200) {
-          initPlugin(player, response.data);
+          options = response.data;
+          options.amp_page = true; //currently assuming that if plugin_config_url is found its an amp page.
+          initPlugin(player, options);
         }
       }).catch(function (error) {
         console.error(error);
