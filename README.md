@@ -71,7 +71,33 @@ The `src/js/index.js` file needs to be edited and a new function has to be added
 npm run build
 ```
 
-The minified js will be available at dist/browser/videojs-rdm-plugin-loader.min.js after build is successfully completed, which should be uploaded to the `rdm_video_cloud` repo on brightcove.
+The js files will be available at `dist/browser/`. We should push both `videojs-rdm-plugin-loader.js` and `videojs-rdm-plugin-loader.min.js` after build is successfully completed  to the `rdm_video_cloud` repo on brightcove.
+
+## Other plugins
+This repository contains all the plugins that are being loaded using the brightcove player interface. They are in the `plugins/js` directory
+ 
+### Pushing the files to the brightcove repository
+Once we have build the videojs-rdm-plugin-loader or updated one or more plugins in the plugin directory, we need to push the updated files to brightcove. We are hosting our plugins with brightcove. We use the [Delivery System API](https://docs.brightcove.com/en/video-cloud/concepts/delivery-system-api/references/v1/index.html) of the Video Cloud to push these files to the `rdm_video_cloud` repository on brightcove. The account ID used to create the `rdm_video_cloud` repository was the City non-DRM account (Account ID: 2226196965001), hence all the request need to be made using that account ID. To upload a file, for eg. videojs-rdm-plugin-loader.js, we can use the following command
+```shell
+curl \
+  --user vineet.phillips@rci.rogers.com \
+  --form contents=@dist/browser/videojs-rdm-plugin-loader.js \
+  --request PUT \
+  https://repos.api.brightcove.com/v1/accounts/2226196965001/repos/rdm_video_cloud/files/videojs-rdm-plugin-loader.js
+```
+You will get the following JSON response.
+```shell
+{"name":"videojs-rdm-plugin-loader.js","public_url":"http://players.brightcove.net/2226196965001/rdm_video_cloud/videojs-rdm-plugin-loader.js"}
+```
+Please note: You will be prompted to enter the password for vineet.phillips@rci.rogers.com if you use the above command. You can replace the username with your own brightcove username or you can use an [OAuth Access Token](https://docs.brightcove.com/en/video-cloud/concepts/delivery-system-api/guides/dev-system-api-overview.html#authentication)
+```shell
+curl \
+  --header "Authorization: Bearer $ACCESS_TOKEN"  \
+  --form contents=@dist/browser/videojs-rdm-plugin-loader.js \
+  --request PUT \
+  https://repos.api.brightcove.com/v1/accounts/2226196965001/repos/rdm_video_cloud/files/videojs-rdm-plugin-loader.js
+```
+
 
 ## License
 
