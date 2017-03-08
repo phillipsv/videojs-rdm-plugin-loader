@@ -77,7 +77,7 @@ The js files will be available at `dist/browser/`. We should push both `videojs-
 This repository contains all the plugins that are being loaded using the brightcove player interface. They are in the `plugins/js` directory
  
 ### Pushing the files to the brightcove repository
-Once we have build the videojs-rdm-plugin-loader or updated one or more plugins in the plugin directory, we need to push the updated files to brightcove. We are hosting our plugins with brightcove. We use the [Delivery System API](https://docs.brightcove.com/en/video-cloud/concepts/delivery-system-api/references/v1/index.html) of the Video Cloud to push these files to the `rdm_video_cloud` repository on brightcove. The account ID used to create the `rdm_video_cloud` repository was the City non-DRM account (Account ID: 2226196965001), hence all the request need to be made using that account ID. To upload a file, for eg. videojs-rdm-plugin-loader.js, we can use the following command
+Once we have build the videojs-rdm-plugin-loader or updated one or more plugins in the plugin directory, we need to push the updated files to brightcove. We are hosting our plugins with brightcove. We use the [Delivery System API](https://docs.brightcove.com/en/video-cloud/concepts/delivery-system-api/references/v1/index.html) of the Video Cloud to push these files to the `rdm_video_cloud` repository on brightcove. The account ID used to create the `rdm_video_cloud` repository was the City non-DRM account (Account ID: 2226196965001), hence all the requests need to be made using that account ID. To upload a file, for eg. videojs-rdm-plugin-loader.js, we can use the following command
 ```shell
 curl \
   --user vineet.phillips@rci.rogers.com \
@@ -85,7 +85,7 @@ curl \
   --request PUT \
   https://repos.api.brightcove.com/v1/accounts/2226196965001/repos/rdm_video_cloud/files/videojs-rdm-plugin-loader.js
 ```
-You will get the following JSON response.
+You will get the following JSON response on success.
 ```shell
 {"name":"videojs-rdm-plugin-loader.js","public_url":"http://players.brightcove.net/2226196965001/rdm_video_cloud/videojs-rdm-plugin-loader.js"}
 ```
