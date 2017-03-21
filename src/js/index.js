@@ -8,7 +8,11 @@ import axios from 'axios';
 const registerPlugin = videojs.registerPlugin || videojs.plugin;
 
 const isInIframe = () => {
-  return window.self !== window.top;
+  try {
+    return window.self !== window.top;
+  } catch (e) {
+    return true;
+  }
 };
 
 const getParameterByName = (name, url) => {
@@ -74,21 +78,20 @@ const getCustomParamsQueryString = (options) => {
   let queryString = '';
 
   const requestUri = getRequestUri();
-  let requestUriParts = requestUri.split('/');
-
-  requestUriParts = removeEmptyElements(requestUriParts);
-
-  const adUtilityObject = getAdUtility();
-  const adUtilTargetQueryString = getAdUtilTargetQueryString();
-
-  if(options.hasOwnProperty('amp_page') && true === options.amp_page){
-    queryString += 'environment=googleamp&';
-  }
-
-  if (requestUriParts.length > 0) {
+  if(requestUri) {
+    let requestUriParts = requestUri.split('/');
+    requestUriParts = removeEmptyElements(requestUriParts);
     queryString += 'section=' + requestUriParts[0] + '&';
     queryString += 'page=' + requestUriParts.join(',') + '&';
   }
+
+  const amp_url = getParameterByName('linkbaseurl');//currently assuming that if linkbaseurk is found its an amp page.
+  if(amp_url){
+    queryString += 'environment=googleamp&';
+  }
+
+  const adUtilityObject = getAdUtility();
+  const adUtilTargetQueryString = getAdUtilTargetQueryString();
 
   if (adUtilityObject != false && adUtilityObject.sponsId != '') {
     queryString += 'SponsId=' + adUtilityObject.sponsId + '&';
@@ -198,6 +201,9 @@ const getAdUtilTarget = () => {
   }
   return false;
 };
+
+
+const getIndexAds= (a,b) => {if("string"!=typeof a||"object"!=typeof b)return a;try{b=JSON.stringify(b);var c=window.location!==window.parent.location?document.referrer:window.location.href,d=encodeURIComponent(a).replace(/(%7B)([^%]*)(%7D)/g,"{$2}");return console.log(d),"//as-sec.casalemedia.com/playlist?ix_id=%5Bindex_epr%5D&ix_v=8.8&ix_u="+encodeURIComponent(c)+"&ix_vt="+d+"&ix_s=191888&ix_vasd=0&ix_ca="+encodeURIComponent('{"protocols": [2,3,5,6],"mimes":["video/mp4","video/webm","application/javascript","video/x-flv","application/x-shockwave-flash"],"apiList":[1, 2],"size":"640x360","timeout": 1000,"durations": [15,30]}')+"&ix_so="+encodeURIComponent(b)}catch(b){return a}};
 
 //plugins to be loaded
 const pluginFunctions = {
@@ -312,6 +318,7 @@ const pluginFunctions = {
   },
 
   setup_ima3: (player, options) => {
+
     let adServerUrl = '';
 
     if (typeof player.ima3.settings !== 'undefined') {
@@ -335,6 +342,12 @@ const pluginFunctions = {
 
     if (customParams != '') {
       adServerUrl += '&cust_params=' + encodeURIComponent(customParams);
+    }
+
+    //index bidding exchange
+    if(options.hasOwnProperty('index_bidding_ad_server_url_exchange') && options.index_bidding_ad_server_url_exchange.hasOwnProperty('index_bidding_ad_exchange_site_id')){
+      const so = options.index_bidding_ad_server_url_exchange.index_bidding_ad_exchange_site_id;
+      adServerUrl = getIndexAds(adServerUrl, so);
     }
 
     if (typeof player.ima3 !== 'undefined' && typeof player.ima3 !== 'object') {
@@ -497,7 +510,6 @@ const rdmPluginLoader = function(options) {
       axios.get(plugin_config_url).then(function (response) {
         if (response.status === 200) {
           options = response.data;
-          options.amp_page = true; //currently assuming that if plugin_config_url is found its an amp page.
           initPlugin(player, options);
         }
       }).catch(function (error) {
@@ -517,6 +529,6 @@ const rdmPluginLoader = function(options) {
 registerPlugin('rdmPluginLoader', rdmPluginLoader);
 
 // Include the version number.
-rdmPluginLoader.VERSION = '__VERSION__';
+rdmPluginLoader.VERSION = '2.96';
 
 export default rdmPluginLoader;

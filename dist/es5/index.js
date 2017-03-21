@@ -23,7 +23,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var registerPlugin = _video2.default.registerPlugin || _video2.default.plugin;
 
 var isInIframe = function isInIframe() {
-  return window.self !== window.top;
+  try {
+    return window.self !== window.top;
+  } catch (e) {
+    return true;
+  }
 };
 
 var getParameterByName = function getParameterByName(name, url) {
@@ -89,21 +93,20 @@ var getCustomParamsQueryString = function getCustomParamsQueryString(options) {
   var queryString = '';
 
   var requestUri = getRequestUri();
-  var requestUriParts = requestUri.split('/');
-
-  requestUriParts = removeEmptyElements(requestUriParts);
-
-  var adUtilityObject = getAdUtility();
-  var adUtilTargetQueryString = getAdUtilTargetQueryString();
-
-  if (options.hasOwnProperty('amp_page') && true === options.amp_page) {
-    queryString += 'environment=googleamp&';
-  }
-
-  if (requestUriParts.length > 0) {
+  if (requestUri) {
+    var requestUriParts = requestUri.split('/');
+    requestUriParts = removeEmptyElements(requestUriParts);
     queryString += 'section=' + requestUriParts[0] + '&';
     queryString += 'page=' + requestUriParts.join(',') + '&';
   }
+
+  var amp_url = getParameterByName('linkbaseurl'); //currently assuming that if linkbaseurk is found its an amp page.
+  if (amp_url) {
+    queryString += 'environment=googleamp&';
+  }
+
+  var adUtilityObject = getAdUtility();
+  var adUtilTargetQueryString = getAdUtilTargetQueryString();
 
   if (adUtilityObject != false && adUtilityObject.sponsId != '') {
     queryString += 'SponsId=' + adUtilityObject.sponsId + '&';
@@ -212,6 +215,15 @@ var getAdUtilTarget = function getAdUtilTarget() {
     return window.adutil_target;
   }
   return false;
+};
+
+var getIndexAds = function getIndexAds(a, b) {
+  if ("string" != typeof a || "object" != (typeof b === 'undefined' ? 'undefined' : _typeof(b))) return a;try {
+    b = JSON.stringify(b);var c = window.location !== window.parent.location ? document.referrer : window.location.href,
+        d = encodeURIComponent(a).replace(/(%7B)([^%]*)(%7D)/g, "{$2}");return console.log(d), "//as-sec.casalemedia.com/playlist?ix_id=%5Bindex_epr%5D&ix_v=8.8&ix_u=" + encodeURIComponent(c) + "&ix_vt=" + d + "&ix_s=191888&ix_vasd=0&ix_ca=" + encodeURIComponent('{"protocols": [2,3,5,6],"mimes":["video/mp4","video/webm","application/javascript","video/x-flv","application/x-shockwave-flash"],"apiList":[1, 2],"size":"640x360","timeout": 1000,"durations": [15,30]}') + "&ix_so=" + encodeURIComponent(b);
+  } catch (b) {
+    return a;
+  }
 };
 
 //plugins to be loaded
@@ -327,6 +339,7 @@ var pluginFunctions = {
   },
 
   setup_ima3: function setup_ima3(player, options) {
+
     var adServerUrl = '';
 
     if (typeof player.ima3.settings !== 'undefined') {
@@ -350,6 +363,12 @@ var pluginFunctions = {
 
     if (customParams != '') {
       adServerUrl += '&cust_params=' + encodeURIComponent(customParams);
+    }
+
+    //index bidding exchange
+    if (options.hasOwnProperty('index_bidding_ad_server_url_exchange') && options.index_bidding_ad_server_url_exchange.hasOwnProperty('index_bidding_ad_exchange_site_id')) {
+      var so = options.index_bidding_ad_server_url_exchange.index_bidding_ad_exchange_site_id;
+      adServerUrl = getIndexAds(adServerUrl, so);
     }
 
     if (typeof player.ima3 !== 'undefined' && _typeof(player.ima3) !== 'object') {
@@ -513,7 +532,6 @@ var rdmPluginLoader = function rdmPluginLoader(options) {
       _axios2.default.get(plugin_config_url).then(function (response) {
         if (response.status === 200) {
           options = response.data;
-          options.amp_page = true; //currently assuming that if plugin_config_url is found its an amp page.
           initPlugin(player, options);
         }
       }).catch(function (error) {
@@ -531,6 +549,6 @@ var rdmPluginLoader = function rdmPluginLoader(options) {
 registerPlugin('rdmPluginLoader', rdmPluginLoader);
 
 // Include the version number.
-rdmPluginLoader.VERSION = '__VERSION__';
+rdmPluginLoader.VERSION = '2.96';
 
 exports.default = rdmPluginLoader;
