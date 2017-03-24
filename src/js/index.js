@@ -76,18 +76,24 @@ const addToIU = (url, position, addition) => {
 const getCustomParamsQueryString = (options) => {
 
   let queryString = '';
-
-  const requestUri = getRequestUri();
-  if(requestUri) {
-    let requestUriParts = requestUri.split('/');
-    requestUriParts = removeEmptyElements(requestUriParts);
-    queryString += 'section=' + requestUriParts[0] + '&';
-    queryString += 'page=' + requestUriParts.join(',') + '&';
-  }
+  let requestUri = '';
 
   const amp_url = getParameterByName('linkbaseurl');//currently assuming that if linkbaseurk is found its an amp page.
   if(amp_url){
     queryString += 'environment=googleamp&';
+    const urlobj = parseUrl(amp_url);
+    requestUri = urlobj.pathname; //since its an amp page lets get the path from the linkbaseurl;
+
+  }
+  else{
+    requestUri = getRequestUri();
+  }
+
+  if(requestUri) {
+    let requestUriParts = requestUri.split('/');
+    requestUriParts = removeEmptyElements(requestUriParts);
+    queryString += 'section=' + ( (typeof requestUriParts[0] !== 'undefined')  ? requestUriParts[0] : '' ) + '&';
+    queryString += 'page=' + requestUriParts.join(',') + '&';
   }
 
   const adUtilityObject = getAdUtility();
@@ -202,6 +208,11 @@ const getAdUtilTarget = () => {
   return false;
 };
 
+const parseUrl = ( url ) => {
+  var a = document.createElement('a');
+  a.href = url;
+  return a;
+};
 
 const getIndexAds= (a,b) => {if("string"!=typeof a||"object"!=typeof b)return a;try{b=JSON.stringify(b);var c=window.location!==window.parent.location?document.referrer:window.location.href,d=encodeURIComponent(a).replace(/(%7B)([^%]*)(%7D)/g,"{$2}");return console.log(d),"//as-sec.casalemedia.com/playlist?ix_id=%5Bindex_epr%5D&ix_v=8.8&ix_u="+encodeURIComponent(c)+"&ix_vt="+d+"&ix_s=191888&ix_vasd=0&ix_ca="+encodeURIComponent('{"protocols": [2,3,5,6],"mimes":["video/mp4","video/webm","application/javascript","video/x-flv","application/x-shockwave-flash"],"apiList":[1, 2],"size":"640x360","timeout": 1000,"durations": [15,30]}')+"&ix_so="+encodeURIComponent(b)}catch(b){return a}};
 
