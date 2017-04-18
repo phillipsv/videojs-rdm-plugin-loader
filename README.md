@@ -89,7 +89,7 @@ You will get the following JSON response on success.
 ```shell
 {"name":"videojs-rdm-plugin-loader.js","public_url":"http://players.brightcove.net/2226196965001/rdm_video_cloud/videojs-rdm-plugin-loader.js"}
 ```
-Note: It is recommended that when you upload the file to the brightcove repository you include the version number of the RDM Video Cloud Plugin to the filename for example set the file name as
+Note: It is recommended that when you **also** upload the file to the brightcove repository you include the version number of the RDM Video Cloud Plugin to the filename for example set the file name as
 ```shell
  https://repos.api.brightcove.com/v1/accounts/2226196965001/repos/rdm_video_cloud/files/videojs-rdm-plugin-loader-2.96.js
 ```
