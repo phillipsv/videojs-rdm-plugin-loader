@@ -362,7 +362,7 @@ function s_pgicq(){var a=window,k=a.s_giq,q,r,n;if(k)for(q=0;q<k.length;q++)r=k[
 			this._adCounter = this._adCounter+1;
 			if (this._player.ima3) {
 				if (this._player.ima3.currentAd) {
-					currentAd = this._player.ima3.currentAd.b ? this._player.ima3.currentAd.b : this._player.ima3.currentAd;
+					currentAd = this._player.ima3.currentAd.g ? this._player.ima3.currentAd.g : this._player.ima3.currentAd;
 
 					adInfo.id = currentAd.id || currentAd.adId;
 					adInfo.name = currentAd.title;
@@ -707,7 +707,7 @@ function s_pgicq(){var a=window,k=a.s_giq,q,r,n;if(k)for(q=0;q<k.length;q++)r=k[
 		// Filtering duplicate tags
 		var tags = new Array();
 		for (var i=0; i < this._player.mediainfo.tags.length; i++) {
-			if (jQuery.inArray(this._player.mediainfo.tags[i], tags) == -1) {
+			if (tags.indexOf(this._player.mediainfo.tags[i]) == -1 ) {
 				tags.push(this._player.mediainfo.tags[i]);
 			}
 		}
@@ -730,12 +730,17 @@ function s_pgicq(){var a=window,k=a.s_giq,q,r,n;if(k)for(q=0;q<k.length;q++)r=k[
 
 		try {
 			if (window.self !== window.top && parent.rdm.dtm.dl)
-				rdmDtm  = parent.rdm.dtm.dl
+				rdmDtm  = parent.rdm.dtm.dl;
 			else if (rdm.dtm.dl)
 				rdmDtm = rdm.dtm.dl;
 		}
 		catch(err) {
-			eVars.eVar2 = rdm.dtm.dl.brand; // rdm.dtm.dl still exists in the iframe (the only value available is brand)
+			if(typeof rdm !== 'undefined'){
+				eVars.eVar2 = rdm.dtm.dl.brand; // rdm.dtm.dl still exists in the iframe (the only value available is brand)
+			}
+			else{
+				eVars.eVar2 = "na";
+			}
 			eVars.evar6 = "na";
 			eVars.evar10 = "na";
 			error = true;
