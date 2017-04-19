@@ -91,18 +91,22 @@ var addToIU = function addToIU(url, position, addition) {
 var getCustomParamsQueryString = function getCustomParamsQueryString(options) {
 
   var queryString = '';
-
-  var requestUri = getRequestUri();
-  if (requestUri) {
-    var requestUriParts = requestUri.split('/');
-    requestUriParts = removeEmptyElements(requestUriParts);
-    queryString += 'section=' + requestUriParts[0] + '&';
-    queryString += 'page=' + requestUriParts.join(',') + '&';
-  }
+  var requestUri = '';
 
   var amp_url = getParameterByName('linkbaseurl'); //currently assuming that if linkbaseurk is found its an amp page.
   if (amp_url) {
     queryString += 'environment=googleamp&';
+    var urlobj = parseUrl(amp_url);
+    requestUri = urlobj.pathname; //since its an amp page lets get the path from the linkbaseurl;
+  } else {
+    requestUri = getRequestUri();
+  }
+
+  if (requestUri) {
+    var requestUriParts = requestUri.split('/');
+    requestUriParts = removeEmptyElements(requestUriParts);
+    queryString += 'section=' + (typeof requestUriParts[0] !== 'undefined' ? requestUriParts[0] : '') + '&';
+    queryString += 'page=' + requestUriParts.join(',') + '&';
   }
 
   var adUtilityObject = getAdUtility();
@@ -215,6 +219,12 @@ var getAdUtilTarget = function getAdUtilTarget() {
     return window.adutil_target;
   }
   return false;
+};
+
+var parseUrl = function parseUrl(url) {
+  var a = document.createElement('a');
+  a.href = url;
+  return a;
 };
 
 var getIndexAds = function getIndexAds(a, b) {

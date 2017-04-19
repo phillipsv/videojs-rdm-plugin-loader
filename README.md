@@ -89,7 +89,11 @@ You will get the following JSON response on success.
 ```shell
 {"name":"videojs-rdm-plugin-loader.js","public_url":"http://players.brightcove.net/2226196965001/rdm_video_cloud/videojs-rdm-plugin-loader.js"}
 ```
-Please note: You will be prompted to enter the password for vineet.phillips@rci.rogers.com if you use the above command. You can replace the username with your own brightcove username or you can use an [OAuth Access Token](https://docs.brightcove.com/en/video-cloud/concepts/delivery-system-api/guides/dev-system-api-overview.html#authentication)
+Note: It is recommended that when you **also** upload the file to the brightcove repository you include the version number of the RDM Video Cloud Plugin to the filename for example set the file name as
+```shell
+ https://repos.api.brightcove.com/v1/accounts/2226196965001/repos/rdm_video_cloud/files/videojs-rdm-plugin-loader-2.96.js
+```
+Note: You will be prompted to enter the password for vineet.phillips@rci.rogers.com if you use the above command. You can replace the username with your own brightcove username or you can use an [OAuth Access Token](https://docs.brightcove.com/en/video-cloud/concepts/delivery-system-api/guides/dev-system-api-overview.html#authentication)
 ```shell
 curl \
   --header "Authorization: Bearer $ACCESS_TOKEN"  \
